@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/accordion";
 import { toast } from "sonner";
 import { Link } from "react-router-dom";
+import InteractiveAidMap from "./InteractiveAidMap";
 
 const Index = () => {
   const [formData, setFormData] = useState({
@@ -83,6 +84,14 @@ const Index = () => {
             Call Emergency Services
           </Button>
         </form>
+      </section>
+
+      <section className="mb-12">
+        <h2 className="text-2xl font-bold mb-4">Interactive Aid Suggestions</h2>
+        <p className="mb-4">
+          Click on a body part to receive specific aid suggestions.
+        </p>
+        <InteractiveAidMap />
       </section>
 
       <section>
