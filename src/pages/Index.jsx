@@ -9,6 +9,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { toast } from "sonner";
+import { Link } from "react-router-dom";
 
 const Index = () => {
   const [formData, setFormData] = useState({
@@ -109,6 +110,15 @@ const Index = () => {
             </AccordionContent>
           </AccordionItem>
         </Accordion>
+      </section>
+      <section className="mt-8">
+        <h2 className="text-2xl font-bold mb-4">Medical Library</h2>
+        <p className="mb-4">
+          Access our comprehensive medical library for detailed information on various treatments and conditions.
+        </p>
+        <Link to="/medical-library">
+          <Button>Go to Medical Library</Button>
+        </Link>
       </section>
     </div>
   );
