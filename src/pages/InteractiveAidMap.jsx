@@ -28,8 +28,13 @@ const aidSuggestions = {
   rightLeg: "For leg injuries, help the person lie down and elevate the injured leg. Apply cold packs to reduce swelling. If you suspect a fracture, do not attempt to straighten the leg.",
 };
 
-const InteractiveAidMap = () => {
+const InteractiveAidMap = ({ playSound }) => {
   const [selectedPart, setSelectedPart] = useState(null);
+
+  const handlePartClick = (partId) => {
+    setSelectedPart(partId);
+    playSound();
+  };
 
   return (
     <div className="relative w-full h-[500px] border border-gray-300 rounded-lg">
@@ -43,18 +48,18 @@ const InteractiveAidMap = () => {
           <DialogTrigger asChild>
             <Button
               variant="outline"
-              className="absolute w-12 h-12 rounded-full"
+              className="absolute w-16 h-16 rounded-full text-lg font-bold"
               style={{ top: part.top, left: part.left }}
-              onClick={() => setSelectedPart(part.id)}
+              onClick={() => handlePartClick(part.id)}
             >
               {part.name}
             </Button>
           </DialogTrigger>
-          <DialogContent>
+          <DialogContent className="max-w-md">
             <DialogHeader>
-              <DialogTitle>Aid Suggestions for {part.name}</DialogTitle>
+              <DialogTitle className="text-2xl">{part.name} Aid Suggestions</DialogTitle>
             </DialogHeader>
-            <p>{aidSuggestions[part.id]}</p>
+            <p className="text-lg">{aidSuggestions[part.id]}</p>
           </DialogContent>
         </Dialog>
       ))}

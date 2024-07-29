@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Accordion,
   AccordionContent,
@@ -6,6 +6,9 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { VolumeX, Volume2 } from "lucide-react";
+import { toast } from "sonner";
 
 const medicalTreatments = {
   "First Aid": [
@@ -27,6 +30,29 @@ const medicalTreatments = {
 
 const MedicalLibrary = () => {
   const [searchTerm, setSearchTerm] = useState("");
+  const [isSoundEnabled, setIsSoundEnabled] = useState(true);
+
+  useEffect(() => {
+    // Load sound preference from localStorage
+    const soundPreference = localStorage.getItem("soundEnabled");
+    if (soundPreference !== null) {
+      setIsSoundEnabled(JSON.parse(soundPreference));
+    }
+  }, []);
+
+  const playSound = () => {
+    if (isSoundEnabled) {
+      const audio = new Audio("/button-click.mp3");
+      audio.play();
+    }
+  };
+
+  const toggleSound = () => {
+    const newSoundState = !isSoundEnabled;
+    setIsSoundEnabled(newSoundState);
+    localStorage.setItem("soundEnabled", JSON.stringify(newSoundState));
+    toast(newSoundState ? "Sound enabled" : "Sound disabled");
+  };
 
   const filteredTreatments = Object.entries(medicalTreatments).reduce((acc, [category, treatments]) => {
     const filteredCategory = treatments.filter(treatment =>
@@ -41,24 +67,32 @@ const MedicalLibrary = () => {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-6">Medical Treatment Library</h1>
+      <Button
+        onClick={toggleSound}
+        className="fixed top-4 right-4 z-10"
+        variant="outline"
+      >
+        {isSoundEnabled ? <Volume2 /> : <VolumeX />}
+      </Button>
+
+      <h1 className="text-4xl font-bold mb-6">Medical Treatment Library</h1>
       <Input
         type="text"
         placeholder="Search treatments..."
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
-        className="mb-6"
+        className="mb-6 text-lg p-3"
       />
       <Accordion type="single" collapsible className="w-full">
         {Object.entries(filteredTreatments).map(([category, treatments]) => (
           <AccordionItem value={category} key={category}>
-            <AccordionTrigger>{category}</AccordionTrigger>
+            <AccordionTrigger className="text-2xl" onClick={playSound}>{category}</AccordionTrigger>
             <AccordionContent>
               <Accordion type="single" collapsible className="w-full">
                 {treatments.map((treatment) => (
                   <AccordionItem value={treatment.name} key={treatment.name}>
-                    <AccordionTrigger>{treatment.name}</AccordionTrigger>
-                    <AccordionContent>{treatment.content}</AccordionContent>
+                    <AccordionTrigger className="text-xl" onClick={playSound}>{treatment.name}</AccordionTrigger>
+                    <AccordionContent className="text-lg">{treatment.content}</AccordionContent>
                   </AccordionItem>
                 ))}
               </Accordion>
